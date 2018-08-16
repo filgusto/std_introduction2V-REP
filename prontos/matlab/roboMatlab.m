@@ -27,7 +27,7 @@ for i=1:4
 end
 
 % Recebendo handler do robo
-[resp,handle_robo] = VREP.simxGetObjectHandle(clientID,'robo',VREP.simx_opmode_blocking);
+[resp,handle_robo] = VREP.simxGetObjectHandle(clientID,'roboBase',VREP.simx_opmode_blocking);
 
 
 % --Iniciando o streaming das variaveis de interesse
