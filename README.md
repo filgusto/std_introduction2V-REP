@@ -1,2 +1,2 @@
 # introduction2V-REP
-This repository introduces V-REP, focusing with ROS interfacing
+This repository introduces V-REP, focusing in ROS interfacing
