@@ -1,4 +1,6 @@
-
+-- For ROS teleoperation, consider ros-<$ROS_DISTRO>-key-teleop package for control
+-- https://github.com/ros-teleop/teleop_tools
+-- rosrun key_teleop key_teleop.py
 
 function sysCall_init()
    
@@ -33,7 +35,7 @@ function sysCall_init()
         local MotorSpeedTopicName='velMotores' -- we add a random component so that we can have several instances of this robot running
        
         pubPosicao = simROS.advertise('/roboPosicao','geometry_msgs/Point')
-        subComandoVel = simROS.subscribe('/roboComandoVelocidade','sensor_msgs/Joy','setMotorsVelocity_cb')
+        subComandoVel = simROS.subscribe('/key_vel','geometry_msgs/Twist','setMotorsVelocity_cb')
 
     end
 
@@ -46,7 +48,7 @@ function sysCall_actuation()
 
     -- Obtem a posicao do robo
         getPos = {}
-    	getPos = sim.getObjectPosition(robotHandle, -1)
+        getPos = sim.getObjectPosition(robotHandle, -1)
 
     -- Publica a posicao do robo
         tabela_pos = {}
@@ -69,10 +71,15 @@ end
 -- Callback do ROS
 function setMotorsVelocity_cb(msg)
     
-    sim.setJointTargetVelocity(mot[1],msg.axes[1])
-    sim.setJointTargetVelocity(mot[2],msg.axes[2])
-    sim.setJointTargetVelocity(mot[3],msg.axes[3])
-    sim.setJointTargetVelocity(mot[4],msg.axes[4])
+    -- matematica de padaria para setar as velocidades dos motores
+    vel_left = 3 * (0.6 * -msg.linear.x - 0.4 * msg.angular.z) 
+    vel_right = 3 * (0.6 * -msg.linear.x + 0.4 * msg.angular.z)
+
+    -- setando as velocidades dos motores
+    sim.setJointTargetVelocity(mot[1],vel_right)
+    sim.setJointTargetVelocity(mot[2],vel_right)
+    sim.setJointTargetVelocity(mot[3],vel_left)
+    sim.setJointTargetVelocity(mot[4],vel_left)
 
 end
 
